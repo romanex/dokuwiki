@@ -1,0 +1,5 @@
+From MS Word to HTML \\
+https://php-ru.info/editor.html \\
+
+From HTML to DokuWIKI \\
+https://pandoc.org/try/?text=&from=html&to=dokuwiki \\
