@@ -2,3 +2,7 @@ sidebar
 start
 linux:test.txt
 windows:test
+bitrix:esxi:setup_vm
+bitrix:многосайтовость
+windows:server:gpo:настройка_политики_пользователей
+bitrix:esxi:многосайтовость

@@ -1,0 +1,339 @@
+
+<p>
+Настройка тестовой виртуальной машины битрикс.
+</p>
+
+<p>
+1. Устанавливаем обновления<br/>
+
+yum update -y<br/>
+
+2. Устанавливаем по<br/>
+
+yum install wget<br/>
+
+yum install mc<br/>
+
+yum install nano<br/>
+
+3. Переходим в папку /home/<br/>
+
+cd /home<br/>
+
+4. Скачиваем скрипт установки битрикс окружения<br/>
+
+wget http://repos.1c-bitrix.ru/yum/bitrix-env.sh<br/>
+
+5. Ставим права на запуск скрипта<br/>
+
+chmod 755 bitrix-env.sh<br/>
+
+6. Запускаем скрипт<br/>
+
+./bitrix-env.sh<br/>
+
+7. Do you want disable SELinux?(Y|n)<br/>
+
+Y<br/>
+
+8. Перезапускаем машину.<br/>
+
+reboot<br/>
+
+9. Переходим в папку /home/<br/>
+
+cd /home<br/>
+
+10. Запускаем скрипт<br/>
+
+./bitrix-env.sh<br/>
+
+11. Переходим в папку /root/<br/>
+
+cd /root<br/>
+
+12. Запускаем скрипт<br/>
+
+./menu.sh<br/>
+
+13. Enter new password<br/>
+
+47915071<br/>
+
+14. В меню нажимаем 1 а потом ENTER<br/>
+
+1.Create Management pool of server, ENTER<br/>
+
+15. Устанавливаем права на папки home, bitrix, www (777)<br/>
+
+chmod 777 -R /home/bitrix/www<br/>
+
+16. Редактируем файл iptables меняем только айпишки<br/>
+
+nano /etc/sysconfig/iptables<br/>
+
+*filter<br/>
+
+:INPUT ACCEPT [0:0]<br/>
+
+:FORWARD ACCEPT [0:0]<br/>
+
+:OUTPUT ACCEPT [0:0]<br/>
+
+:bx_public - [0:0]<br/>
+
+:bx_trusted - [0:0]<br/>
+
+-A INPUT -j bx_trusted<br/>
+
+-A INPUT -j bx_public<br/>
+
+-A INPUT -m state —state RELATED,ESTABLISHED -j ACCEPT<br/>
+
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 22 -j ACCEPT<br/>
+
+-A INPUT -p udp -m state —state NEW -m udp —dport 137 -j ACCEPT<br/>
+
+-A INPUT -p udp -m state —state NEW -m udp —dport 138 -j ACCEPT<br/>
+
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 139 -j ACCEPT<br/>
+
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 445 -j ACCEPT<br/>
+
+-A INPUT -p icmp -j ACCEPT<br/>
+
+-A INPUT -i lo -j ACCEPT<br/>
+
+-A INPUT -j REJECT —reject-with icmp-host-prohibited<br/>
+
+-A INPUT -p tcp -m state —state NEW -j ACCEPT<br/>
+
+-A INPUT -p tcp -m state —state NEW -j ACCEPT<br/>
+
+-A FORWARD -j REJECT —reject-with icmp-host-prohibited<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8070 -m comment —comment “BX: requests for pool update” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 80 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 443 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8890 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8891 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8893 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8894 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 5222 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 5223 -m comment —comment “BX: web ports” -j ACCEPT<br/>
+
+-A bx_trusted -s 192.168.88.219/32 -p tcp -m tcp -m comment —comment “BX: motoprox01” -j ACCEPT<br/>
+
+-A bx_trusted -s 192.168.88.219/32 -p udp -m udp -m comment —comment “BX: motoprox01” -j ACCEPT<br/>
+
+COMMIT<br/>
+
+17. добавляем в автозагрузку.<br/>
+
+chkconfig iptables on
+</p>
+
+<p>
+Настройка почты
+</p>
+
+<p>
+1. Устанавливаем postfix<br/>
+
+yum install postfix<br/>
+
+systemctl restart postfix<br/>
+
+cd /root<br/>
+
+./menush<br/>
+
+6<br/>
+
+4<br/>
+
+enter site name default<br/>
+
+dev@profispoc.com.ua<br/>
+
+127.0.0.1<br/>
+
+25<br/>
+
+n<br/>
+
+n<br/>
+
+enter
+</p>
+
+<p>
+ромы<br/>
+
+1. Устанавливаем postfix<br/>
+
+yum install postfix<br/>
+
+cat /home/bitrix/.msmtprc
+</p>
+<ol>
+<li class="level1"><div class="li"> smtp account configuration for default<br/>
+</div>
+</li>
+</ol>
+
+<p>
+account default<br/>
+
+logfile /home/bitrix/msmtp_default.log<br/>
+
+host 127.0.0.1<br/>
+
+port 25<br/>
+
+from dev@profispoc.com.ua<br/>
+
+keepbcc off<br/>
+
+auth off
+</p>
+
+<p>
+старый скрипт<br/>
+
+зайти http://192.168.88.“айпи машины”/bitrix/admin/<br/>
+
+Настойки - Проверка системы - начать тестирование<br/>
+
+подключаемся к виртуалке
+</p>
+
+<p>
+1. 6
+</p>
+
+<p>
+2. 4
+</p>
+
+<p>
+3. enter site name default
+</p>
+
+<p>
+4. enter email adress (ввести почту) spoc.com.ua@gmail.com
+</p>
+
+<p>
+5. snp n
+</p>
+
+<p>
+6. tls n
+</p>
+
+<p>
+7. cd /bitrix-env msmtp._conf.sh сделать исполняемым chmod 755
+</p>
+
+<p>
+8. ./msmtp._conf.sh
+</p>
+
+<p>
+9. ввести почту
+</p>
+
+<p>
+10. зайти http://192.168.88.“айпи машины”/bitrix/admin/
+</p>
+
+<p>
+11. найти в поиске php консоль и ввести<br/>
+
+if(mail(“spoc.com.ua@gmail.com”, “TEST SUBJECT”, “TEST BODY”))<br/>
+
+echo “Почтовая система работает!”;<br/>
+
+else<br/>
+
+echo “Неудача, почтовая система не работает, попробуйте еще!”;
+</p>
+
+<p>
+12. должно работать.
+</p>
+
+<p>
+13. Если не заработало проверяем стоят ли почтовые службы
+</p>
+
+<p>
+14. если не стоят ставим exim
+</p>
+
+<p>
+yum install exim
+</p>
+
+<p>
+systemctl restart exim
+</p>
+
+<p>
+2. Проверка почты
+</p>
+
+<p>
+Установка curl<br/>
+
+1. Устанавлиеваем curl<br/>
+
+yum install curl-devel<br/>
+
+2. Переименовіваем файлы<br/>
+
+mv /etc/php.d/ 20-curl.ini.disabled /etc/php.d/20-curl.ini<br/>
+
+mv /etc/php.d/ 20-dom.ini.disabled /etc/php.d/20-dom.ini<br/>
+
+mv /etc/php.d/ 20-pdo.ini.disabled /etc/php.d/20-pdo.ini<br/>
+
+mv /etc/php.d/ 30-pdo_mysql.disabled /etc/php.d/30-pdo_mysql.ini<br/>
+
+mv /etc/php.d/ 30-pdo_sqlite.disabled /etc/php.d/30-pdo_sqlite.ini<br/>
+
+mv /etc/php.d/ 20-curl.ini.disabled /etc/php.d/20-curl.ini
+</p>
+
+<p>
+pdo_mysql.default_socket=/var/lib/mysqld/mysqld.sock in php.ini
+</p>
+
+<p>
+cd /etc/php.d/<br/>
+
+mv 20-curl.ini.disabled 20-curl.ini<br/>
+
+mv 20-pdo.ini.disabled 20-pdo.ini<br/>
+
+mv 20-dom.ini.disabled 20-dom.ini<br/>
+
+mv 30-pdo_mysql.ini.disabled 30-mysql.ini<br/>
+
+mv 30-pdo_sqlite.ini.disabled 30-pdo_sqlite.ini<br/>
+
+</p>
+
+<p>
+pdo_mysql.default_socket=/var/lib/mysqld/mysqld.sock in php.ini<br/>
+
+</p>

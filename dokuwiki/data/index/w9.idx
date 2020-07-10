@@ -1,1 +1,8 @@
 indexmenu
+sysconfig
+chkconfig
+systemctl
+profispoc
+memcached
+templates
+specified

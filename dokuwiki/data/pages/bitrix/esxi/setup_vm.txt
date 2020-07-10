@@ -1,0 +1,166 @@
+Настройка тестовой виртуальной машины битрикс.
+
+1. Устанавливаем обновления\\
+yum update -y\\
+2. Устанавливаем по\\
+yum install wget\\
+yum install mc\\
+yum install nano\\
+3. Переходим в папку /home/\\
+cd /home\\
+4. Скачиваем скрипт установки битрикс окружения\\
+wget http:%%//%%repos.1c-bitrix.ru/yum/bitrix-env.sh\\
+5. Ставим права на запуск скрипта\\
+chmod 755 bitrix-env.sh\\
+6. Запускаем скрипт\\
+./bitrix-env.sh\\
+7. Do you want disable SELinux?(Y|n)\\
+Y\\
+8. Перезапускаем машину.\\
+reboot\\
+9. Переходим в папку /home/\\
+cd /home\\
+10. Запускаем скрипт\\
+./bitrix-env.sh\\
+11. Переходим в папку /root/\\
+cd /root\\
+12. Запускаем скрипт\\
+./menu.sh\\
+13. Enter new password\\
+47915071\\
+14. В меню нажимаем 1 а потом ENTER\\
+1.Create Management pool of server, ENTER\\
+15. Устанавливаем права на папки home, bitrix, www (777)\\
+chmod 777 -R /home/bitrix/www\\
+16. Редактируем файл iptables меняем только айпишки\\
+nano /etc/sysconfig/iptables\\
+*filter\\
+:INPUT ACCEPT [0:0]\\
+:FORWARD ACCEPT [0:0]\\
+:OUTPUT ACCEPT [0:0]\\
+:bx_public - [0:0]\\
+:bx_trusted - [0:0]\\
+-A INPUT -j bx_trusted\\
+-A INPUT -j bx_public\\
+-A INPUT -m state —state RELATED,ESTABLISHED -j ACCEPT\\
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 22 -j ACCEPT\\
+-A INPUT -p udp -m state —state NEW -m udp —dport 137 -j ACCEPT\\
+-A INPUT -p udp -m state —state NEW -m udp —dport 138 -j ACCEPT\\
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 139 -j ACCEPT\\
+-A INPUT -p tcp -m state —state NEW -m tcp —dport 445 -j ACCEPT\\
+-A INPUT -p icmp -j ACCEPT\\
+-A INPUT -i lo -j ACCEPT\\
+-A INPUT -j REJECT —reject-with icmp-host-prohibited\\
+-A INPUT -p tcp -m state —state NEW -j ACCEPT\\
+-A INPUT -p tcp -m state —state NEW -j ACCEPT\\
+-A FORWARD -j REJECT —reject-with icmp-host-prohibited\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8070 -m comment —comment “BX: requests for pool update” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 80 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 443 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8890 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8891 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8893 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 8894 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 5222 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_public -p tcp -m state —state NEW -m tcp —dport 5223 -m comment —comment “BX: web ports” -j ACCEPT\\
+-A bx_trusted -s 192.168.88.219/32 -p tcp -m tcp -m comment —comment “BX: motoprox01” -j ACCEPT\\
+-A bx_trusted -s 192.168.88.219/32 -p udp -m udp -m comment —comment “BX: motoprox01” -j ACCEPT\\
+COMMIT\\
+17. добавляем в автозагрузку.\\
+chkconfig iptables on
+
+Настройка почты
+
+1. Устанавливаем postfix\\
+yum install postfix\\
+systemctl restart postfix\\
+cd /root\\
+./menush\\
+6\\
+4\\
+enter site name default\\
+dev@profispoc.com.ua\\
+127.0.0.1\\
+25\\
+n\\
+n\\
+enter
+
+ромы\\
+1. Устанавливаем postfix\\
+yum install postfix\\
+cat /home/bitrix/.msmtprc
+
+  - smtp account configuration for default\\
+account default\\
+logfile /home/bitrix/msmtp_default.log\\
+host 127.0.0.1\\
+port 25\\
+from dev@profispoc.com.ua\\
+keepbcc off\\
+auth off
+
+старый скрипт\\
+зайти http:%%//%%192.168.88.“айпи машины”/bitrix/admin/\\
+Настойки - Проверка системы - начать тестирование\\
+подключаемся к виртуалке
+
+1. 6
+
+2. 4
+
+3. enter site name default
+
+4. enter email adress (ввести почту) spoc.com.ua@gmail.com
+
+5. snp n
+
+6. tls n
+
+7. cd /bitrix-env msmtp._conf.sh сделать исполняемым chmod 755
+
+8. ./msmtp._conf.sh
+
+9. ввести почту
+
+10. зайти http:%%//%%192.168.88.“айпи машины”/bitrix/admin/
+
+11. найти в поиске php консоль и ввести\\
+if(mail(“spoc.com.ua@gmail.com”, “TEST SUBJECT”, “TEST BODY”))\\
+echo “Почтовая система работает!”;\\
+else\\
+echo “Неудача, почтовая система не работает, попробуйте еще!”;
+
+12. должно работать.
+
+13. Если не заработало проверяем стоят ли почтовые службы
+
+14. если не стоят ставим exim
+
+yum install exim
+
+systemctl restart exim
+
+2. Проверка почты
+
+Установка curl\\
+1. Устанавлиеваем curl\\
+yum install curl-devel\\
+2. Переименовіваем файлы\\
+mv /etc/php.d/ 20-curl.ini.disabled /etc/php.d/20-curl.ini\\
+mv /etc/php.d/ 20-dom.ini.disabled /etc/php.d/20-dom.ini\\
+mv /etc/php.d/ 20-pdo.ini.disabled /etc/php.d/20-pdo.ini\\
+mv /etc/php.d/ 30-pdo_mysql.disabled /etc/php.d/30-pdo_mysql.ini\\
+mv /etc/php.d/ 30-pdo_sqlite.disabled /etc/php.d/30-pdo_sqlite.ini\\
+mv /etc/php.d/ 20-curl.ini.disabled /etc/php.d/20-curl.ini
+
+pdo_mysql.default_socket=/var/lib/mysqld/mysqld.sock in php.ini
+
+cd /etc/php.d/\\
+mv 20-curl.ini.disabled 20-curl.ini\\
+mv 20-pdo.ini.disabled 20-pdo.ini\\
+mv 20-dom.ini.disabled 20-dom.ini\\
+mv 30-pdo_mysql.ini.disabled 30-mysql.ini\\
+mv 30-pdo_sqlite.ini.disabled 30-pdo_sqlite.ini\\
+
+pdo_mysql.default_socket=/var/lib/mysqld/mysqld.sock in php.ini\\

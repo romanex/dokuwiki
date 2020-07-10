@@ -1,0 +1,20 @@
+1 Запретить доступ к дискам и меню\\
+User Configuration\Policies\Administrative Templates\Windows Components\Windows Explorer\\
+Hide these specified drives in My Computer\\
+Prevent access to drives from My Computer\\
+Remove Run menu from Start Menu\\
+Disable Windows Explorer’s default context menu
+
+2 Запретить запуск командной строки\\
+User Configuration → Policies → Administrative Templates → System → Prevent access to the command promt
+
+3 Запрещаем запуск программ\\
+User Configuration → Policies → Administrative Templates → System → Don’t run specified Windows applications\\
+powershell.exe\\
+powershell_ise.exe
+
+4 Прячем элементы панели управления\\
+User Configuration → Administrative Templates → Control Panel → Show only specified Control Panel items.
+
+5 Настройка РДП\\
+User Configuration → Policies → Administrative Templates Administrative Templates → Windows Components → Remote Desktop Services → Remote Desktop Session Host
