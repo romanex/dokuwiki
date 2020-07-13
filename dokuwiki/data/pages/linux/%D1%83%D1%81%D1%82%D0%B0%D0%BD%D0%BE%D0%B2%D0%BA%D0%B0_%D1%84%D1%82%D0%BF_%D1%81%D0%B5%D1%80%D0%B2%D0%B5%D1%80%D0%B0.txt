@@ -1,0 +1,43 @@
+1. Для работы FTP установим ProFTPd сервер.
+
+Подключитесь к серверу по ssh и поочередно введите команды.Первой командой мы установим необходимый пакет.
+
+yum install proftpd\\
+Затем добавляем FTP в автозапуск сервера.
+
+chkconfig proftpd on\\
+Запускаем службу
+
+service proftpd start
+
+2.Теперь создадим пользователя для подключения к серверу.
+
+Сначала необходимо узнать id группы и пользователя, под которым работает Apache. Напишите команду:
+
+id bitrix\\
+Вы получите подобный ответ
+
+uid=600(bitrix) gid=600(bitrix) groups=600(bitrix),10(wheel)\\
+Добавляем пользователя с найденным id
+
+adduser userlogin -g600 -o -u600 -d /home/bitrix/www/\\
+Задаем новому пользователю пароль:
+
+passwd userlogin
+
+3.Открываем 21 порт, чтобы сервер был доступен для подключений. Введите команду:
+
+vim /etc/sysconfig/iptables\\
+Найдите строчку OUTPUT ACCEPT [412:43910] (в самом начале) и затем добавьте:
+
+-A INPUT -p tcp -m tcp —sport 21 -j ACCEPT\\
+-A INPUT -p tcp -m tcp —sport 20 -j ACCEPT\\
+-A INPUT -p tcp -m multiport —dports 20,21,50000:50400 -j ACCEPT\\
+Если вам необходима возможность подключаться к серверу в пассивном режиме, то откройте командой файл:
+
+vim /etc/sysconfig/iptables-config\\
+И добавьте ip_conntrack_ftp в IPTABLES_MODULES=“”
+
+IPTABLES_MODULES=“ip_conntrack_ftp”
+
+4.Перезагрузите сервер. FTP-подключение должно быть доступно.

@@ -1,0 +1,2 @@
+rkhunter <span class="re5">-c</span> <span class="re5">--enable</span> all <span class="re5">--disable</span> none –rwo
+rkhunter <span class="re5">--check</span> <span class="re5">--enable</span> all <span class="re5">--disable</span> none <span class="re5">--rwo</span>

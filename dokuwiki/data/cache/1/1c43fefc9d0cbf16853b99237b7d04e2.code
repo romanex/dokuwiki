@@ -1,0 +1,1 @@
+curl <span class="re5">--insecure</span> <span class="re5">-vvI</span> https:<span class="sy0">//</span>www.spoc.com.ua <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> <span class="sy0">|</span> <span class="kw2">awk</span> <span class="st_h">'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'</span>

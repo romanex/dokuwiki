@@ -1,0 +1,8 @@
+location ~<span class="sy0">*</span> \.<span class="br0">&#40;</span>csv<span class="sy0">|</span>xls<span class="sy0">|</span>xlsx<span class="br0">&#41;</span>$ <span class="br0">&#123;</span>\\
+   add_header Cache-Control <span class="st0">&quot;no-store, no-cache, private&quot;</span>;\\
+   expires <span class="re5">-1</span>;\\
+<span class="br0">&#125;</span><span class="sy0">&lt;</span>code<span class="sy0">&gt;</span>\\
+\\
+===== Запрет на открытие в iframe =====
+\\
+<span class="sy0">&lt;</span>code <span class="kw2">bash</span><span class="sy0">&gt;</span>add_header X-Frame-Options SAMEORIGIN;

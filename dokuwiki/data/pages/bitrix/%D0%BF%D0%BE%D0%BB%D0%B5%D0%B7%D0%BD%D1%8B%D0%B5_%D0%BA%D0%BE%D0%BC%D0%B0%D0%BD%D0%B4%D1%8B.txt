@@ -1,0 +1,2 @@
+Ручное удаление пула \\
+<code bash>rm -rf /etc/ansible/host* /etc/ansible/group_vars/ /etc/ansible/ansible-roles</code>\\

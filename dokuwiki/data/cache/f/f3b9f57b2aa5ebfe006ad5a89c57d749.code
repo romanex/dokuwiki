@@ -1,0 +1,1 @@
+proxy_redirect http:<span class="sy0">//</span>www.site2.com:<span class="nu0">8082</span><span class="sy0">/</span> <span class="sy0">/</span>;

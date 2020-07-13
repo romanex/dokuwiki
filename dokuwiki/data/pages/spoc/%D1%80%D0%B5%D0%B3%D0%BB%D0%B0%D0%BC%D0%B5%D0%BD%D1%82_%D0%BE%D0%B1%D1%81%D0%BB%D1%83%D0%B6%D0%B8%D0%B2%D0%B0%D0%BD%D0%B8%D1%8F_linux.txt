@@ -1,0 +1,21 @@
+  * Проверка системы средствами битрикс. Административная панель – Инструменты – Проверка системы \\
+  * Проверка журнала резервного копирования. Административная панель – Инструменты – Резервное копирование – Журнал резервного копирования. Проверка списка резервных копий.\\
+  * Проверка ресурсов сервера командой htop\\
+  * Анализ последних входов в систему last, lastb\\
+  * Проверка занимаемого места df –h\\
+  * Проверка системы на подозрительные объекты. \\
+<code bash>rkhunter -c --enable all --disable none –rwo
+rkhunter --check --enable all --disable none --rwo</code>
+\\
+  * Анализ журнала
+<code>
+/var/log/messages
+/var/log/nginx/error.log
+/var/log/httpd/error_log
+/var/log/mysql/error.log
+</code>
+
+  * Проверка срока действия сертификата SSL.
+<code bash>
+curl --insecure -vvI https://www.spoc.com.ua 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+</code>

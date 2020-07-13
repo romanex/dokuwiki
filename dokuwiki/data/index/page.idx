@@ -6,3 +6,15 @@ bitrix:esxi:setup_vm
 bitrix:многосайтовость
 windows:server:gpo:настройка_политики_пользователей
 bitrix:esxi:многосайтовость
+1c:linux:установка_hasp
+1c:linux:установка_фтп_севрера
+linux:установка_фтп_сервера
+bitrix:полезные_команды
+1c:linux:nginx:полезные_команды
+linux:nginx:полезные_команды
+spoc:magnat
+spoc:magnat:стандарт_бекапирования_db_клиентов
+spoc:magnat:стандарт_сорздания_пользователя_и_предприятия
+spoc:magnat:стандарт_создания_ou
+spoc:magnat:стандарт_демо_доступа
+spoc:регламент_обслуживания_linux

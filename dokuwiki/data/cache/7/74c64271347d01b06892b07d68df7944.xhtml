@@ -1,0 +1,40 @@
+<ul>
+<li class="level1"><div class="li"> Проверка системы средствами битрикс. Административная панель – Инструменты – Проверка системы <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> Проверка журнала резервного копирования. Административная панель – Инструменты – Резервное копирование – Журнал резервного копирования. Проверка списка резервных копий.<br/>
+</div>
+</li>
+<li class="level1"><div class="li"> Проверка ресурсов сервера командой htop<br/>
+</div>
+</li>
+<li class="level1"><div class="li"> Анализ последних входов в систему last, lastb<br/>
+</div>
+</li>
+<li class="level1"><div class="li"> Проверка занимаемого места df –h<br/>
+</div>
+</li>
+<li class="level1"><div class="li"> Проверка системы на подозрительные объекты. <br/>
+</div>
+</li>
+</ul>
+<pre class="code bash">rkhunter <span class="re5">-c</span> <span class="re5">--enable</span> all <span class="re5">--disable</span> none –rwo
+rkhunter <span class="re5">--check</span> <span class="re5">--enable</span> all <span class="re5">--disable</span> none <span class="re5">--rwo</span></pre>
+
+<p>
+<br/>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> Анализ журнала</div>
+</li>
+</ul>
+<pre class="code">/var/log/messages
+/var/log/nginx/error.log
+/var/log/httpd/error_log
+/var/log/mysql/error.log</pre>
+<ul>
+<li class="level1"><div class="li"> Проверка срока действия сертификата SSL.</div>
+</li>
+</ul>
+<pre class="code bash">curl <span class="re5">--insecure</span> <span class="re5">-vvI</span> https:<span class="sy0">//</span>www.spoc.com.ua <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> <span class="sy0">|</span> <span class="kw2">awk</span> <span class="st_h">'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'</span></pre>

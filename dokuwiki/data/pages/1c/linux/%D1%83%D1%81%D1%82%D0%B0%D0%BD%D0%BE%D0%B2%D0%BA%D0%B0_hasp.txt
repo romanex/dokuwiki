@@ -1,0 +1,87 @@
+====== Установка hasp эмулятора на centos ======
+
+\\
+Обновляем пакеты и делаем ребут:\\
+Код:\\
+yum update\\
+reboot -f
+
+Устанавливаем исходники ядра:\\
+Код:\\
+yum install “kernel-devel-uname-r == $(uname -r)”
+
+Устанавливаем пакеты:\\
+Код:\\
+yum install wget nano usbutils git jansson-devel\\
+yum groupinstall “Development Tools”
+
+Собираем драйвер виртуального USB:\\
+Переходим на http:%%//%%sourceforge.net/projects/usb-…ernel%20module и качаем vhci-hcd-1.15.tar.gz\\
+Переходим на https:%%//%%sourceforge.net/projects/usb…e%20libraries/ и качаем libusb_vhci-0.7.tar.gz\\
+Кидаем всё в /usr/src\\
+Код:\\
+cd /usr/src\\
+tar xzvf vhci-hcd-1.15.tar.gz\\
+tar xzvf libusb_vhci-0.7.tar.gz
+
+Собираем usb_vhci:\\
+Код:\\
+cd vhci-hcd-1.15\\
+mkdir -p “/usr/src/vhci-hcd-1.15/linux/$(uname -r)/drivers/usb/core”\\
+cp “/usr/src/kernels/$(uname -r)/include/linux/usb/hcd.h” “/usr/src/vhci-hcd-1.15/linux/$(uname -r)/drivers/usb/core/”\\
+#В файлах “usb-vhci-hcd.c” и “usb-vhci-iocifc.c” находим “#define DEBUG” и комментируем\\
+make KVERSION=“$(uname -r)” KSRC=“/usr/src/kernels/$(uname -r)”\\
+make install
+
+Загружаем модули в ядро:\\
+Код:\\
+insmod “/usr/lib/modules/”$(uname -r)“/kernel/drivers/usb/host/usb-vhci-hcd.ko”\\
+insmod “/usr/lib/modules/”$(uname -r)“/kernel/drivers/usb/host/usb-vhci-iocifc.ko”
+
+Собираем библиотеки libusb_vhci:\\
+Код:\\
+cd /usr/src/libusb_vhci-0.7\\
+./configure\\
+make\\
+make install\\
+cp /usr/local/lib/**.so** /usr/lib64\\
+ldconfig -v
+
+Собираем эмулятор UsbHasp:\\
+Код:\\
+cd /usr/src\\
+git clone https:%%//%%github.com/sam88651/UsbHasp.git\\
+cd /usr/src/UsbHasp\\
+#В /usr/src/UsbHasp/nbproject/Makefile-Release.mk заменить “CFLAGS=” на “CFLAGS=-std=gnu99”\\
+make\\
+cp /usr/src/UsbHasp/dist/Release/GNU-Linux/usbhasp /usr/bin
+
+Эмулятор готов, запускается следующим образом:\\
+Код:\\
+usbhasp -d key1.json key2.json … keyN.json
+
+Структура ключа:\\
+Код:\\
+{\\
+“HASP Key”: {\\
+“Name”: “Key name”,\\
+“Created”: “01/01/2001”,\\
+“Password”: “00000000”,\\
+“Type”: “00000000”,\\
+“Memory”: “00000000”,\\
+“SN”: “00000000”,\\
+“SecTable”: “0x00,0x00,………,0x00”,\\
+“NetMemory”: “0x00,0x00,………,0x00”,\\
+“Option”: “0x00,0x00,………,0x00”,\\
+“Data”: “0x00,0x00,………,0x00”\\
+}\\
+}
+
+Установка драйвера HASP:\\
+Код:\\
+cd /usr/src\\
+wget http:%%//%%ftp.etersoft.ru/pub/Etersoft/…tos.x86_64.rpm\\
+wget http:%%//%%ftp.etersoft.ru/pub/Etersoft/…tos.x86_64.rpm\\
+yum install haspd-7.90-eter1centos.x86_64.rpm\\
+yum install haspd-modules-7.90-eter1centos.x86_64.rpm\\
+Если ставить с помощью rpm <del>ihv</del> установка не произойдет.

@@ -1,0 +1,28 @@
+==== Запрет кэширования определенных файлов ==== 
+\\
+<code bash>location ~* \.(csv|xls|xlsx)$ {
+   add_header Cache-Control "no-store, no-cache, private";
+   expires -1;
+}</code>
+\\
+==== Запрет на открытие в iframe ====
+\\
+<code bash>add_header X-Frame-Options SAMEORIGIN;</code>\\
+\\
+==== Блокировка путей, начинающийся с точки (например, ".git", ".svn") ====
+<code bash>location ~ /\. {
+      deny all;
+}</code>
+\\
+==== Большинство хакерских сканеров ====
+<code bas>if ( $http_user_agent ~* (nmap|nikto|wikto|sf|sqlmap|bsqlbf|w3af|acunetix|havij|appscan) ) {
+    return 403;
+}</code>
+\\
+==== удалить номер порта в ответе ====
+<code bash>proxy_redirect http://www.site2.com:8082/ /;</code>
+\\
+==== Сортировка вывода лога сервера ====
+<code bash>awk '{print $8}' /var/log/nginx/askona_ua_access.log | sort | uniq -c | sort -rn
+
+awk '($8 ~ /404/)' /var/log/nginx/askona_ua_access.log | awk '{print $10}' | sort | uniq -c | sort -rn</code>

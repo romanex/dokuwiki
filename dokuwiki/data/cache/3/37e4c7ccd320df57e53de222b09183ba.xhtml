@@ -1,0 +1,91 @@
+
+<p>
+Установка Proftpd сервера на Centos
+<br/>
+
+1. Для работы <abbr title="File Transfer Protocol">FTP</abbr> установим ProFTPd сервер.
+</p>
+
+<p>
+Подключитесь к серверу по ssh и поочередно введите команды.Первой командой мы установим необходимый пакет.
+</p>
+
+<p>
+yum install proftpd<br/>
+
+Затем добавляем <abbr title="File Transfer Protocol">FTP</abbr> в автозапуск сервера.
+</p>
+
+<p>
+chkconfig proftpd on<br/>
+
+Запускаем службу
+</p>
+
+<p>
+service proftpd start
+</p>
+
+<p>
+2.Теперь создадим пользователя для подключения к серверу.
+</p>
+
+<p>
+Сначала необходимо узнать id группы и пользователя, под которым работает Apache. Напишите команду:
+</p>
+
+<p>
+id bitrix<br/>
+
+Вы получите подобный ответ
+</p>
+
+<p>
+uid=600(bitrix) gid=600(bitrix) groups=600(bitrix),10(wheel)<br/>
+
+Добавляем пользователя с найденным id
+</p>
+
+<p>
+adduser userlogin -g600 -o -u600 -d /home/bitrix/www/<br/>
+
+Задаем новому пользователю пароль:
+</p>
+
+<p>
+passwd userlogin
+</p>
+
+<p>
+3.Открываем 21 порт, чтобы сервер был доступен для подключений. Введите команду:
+</p>
+
+<p>
+vim /etc/sysconfig/iptables<br/>
+
+Найдите строчку OUTPUT ACCEPT [412:43910] (в самом начале) и затем добавьте:
+</p>
+
+<p>
+-A INPUT -p tcp -m tcp —sport 21 -j ACCEPT<br/>
+
+-A INPUT -p tcp -m tcp —sport 20 -j ACCEPT<br/>
+
+-A INPUT -p tcp -m multiport —dports 20,21,50000:50400 -j ACCEPT<br/>
+
+Если вам необходима возможность подключаться к серверу в пассивном режиме, то откройте командой файл:
+</p>
+
+<p>
+vim /etc/sysconfig/iptables-config<br/>
+
+И добавьте ip_conntrack_ftp в IPTABLES_MODULES=“”
+</p>
+
+<p>
+IPTABLES_MODULES=“ip_conntrack_ftp”
+</p>
+
+<p>
+4.Перезагрузите сервер. <abbr title="File Transfer Protocol">FTP</abbr>-подключение должно быть доступно.
+</p>

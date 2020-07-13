@@ -1,0 +1,177 @@
+
+<h1 class="sectionedit1" id="установка_hasp_эмулятора_на_centos">Установка hasp эмулятора на centos</h1>
+<div class="level1">
+
+<p>
+<br/>
+
+Обновляем пакеты и делаем ребут:<br/>
+
+Код:<br/>
+
+yum update<br/>
+
+reboot -f
+</p>
+
+<p>
+Устанавливаем исходники ядра:<br/>
+
+Код:<br/>
+
+yum install “kernel-devel-uname-r == $(uname -r)”
+</p>
+
+<p>
+Устанавливаем пакеты:<br/>
+
+Код:<br/>
+
+yum install wget nano usbutils git jansson-devel<br/>
+
+yum groupinstall “Development Tools”
+</p>
+
+<p>
+Собираем драйвер виртуального USB:<br/>
+
+Переходим на http://sourceforge.net/projects/usb-…ernel%20module и качаем vhci-hcd-1.15.tar.gz<br/>
+
+Переходим на https://sourceforge.net/projects/usb…e%20libraries/ и качаем libusb_vhci-0.7.tar.gz<br/>
+
+Кидаем всё в /usr/src<br/>
+
+Код:<br/>
+
+cd /usr/src<br/>
+
+tar xzvf vhci-hcd-1.15.tar.gz<br/>
+
+tar xzvf libusb_vhci-0.7.tar.gz
+</p>
+
+<p>
+Собираем usb_vhci:<br/>
+
+Код:<br/>
+
+cd vhci-hcd-1.15<br/>
+
+mkdir -p “/usr/src/vhci-hcd-1.15/linux/$(uname -r)/drivers/usb/core”<br/>
+
+cp “/usr/src/kernels/$(uname -r)/include/linux/usb/hcd.h” “/usr/src/vhci-hcd-1.15/linux/$(uname -r)/drivers/usb/core/”<br/>
+
+#В файлах “usb-vhci-hcd.c” и “usb-vhci-iocifc.c” находим “#define DEBUG” и комментируем<br/>
+
+make KVERSION=“$(uname -r)” KSRC=“/usr/src/kernels/$(uname -r)”<br/>
+
+make install
+</p>
+
+<p>
+Загружаем модули в ядро:<br/>
+
+Код:<br/>
+
+insmod “/usr/lib/modules/”$(uname -r)“/kernel/drivers/usb/host/usb-vhci-hcd.ko”<br/>
+
+insmod “/usr/lib/modules/”$(uname -r)“/kernel/drivers/usb/host/usb-vhci-iocifc.ko”
+</p>
+
+<p>
+Собираем библиотеки libusb_vhci:<br/>
+
+Код:<br/>
+
+cd /usr/src/libusb_vhci-0.7<br/>
+
+./configure<br/>
+
+make<br/>
+
+make install<br/>
+
+cp /usr/local/lib/<strong>.so</strong> /usr/lib64<br/>
+
+ldconfig -v
+</p>
+
+<p>
+Собираем эмулятор UsbHasp:<br/>
+
+Код:<br/>
+
+cd /usr/src<br/>
+
+git clone https://github.com/sam88651/UsbHasp.git<br/>
+
+cd /usr/src/UsbHasp<br/>
+
+#В /usr/src/UsbHasp/nbproject/Makefile-Release.mk заменить “CFLAGS=” на “CFLAGS=-std=gnu99”<br/>
+
+make<br/>
+
+cp /usr/src/UsbHasp/dist/Release/GNU-Linux/usbhasp /usr/bin
+</p>
+
+<p>
+Эмулятор готов, запускается следующим образом:<br/>
+
+Код:<br/>
+
+usbhasp -d key1.json key2.json … keyN.json
+</p>
+
+<p>
+Структура ключа:<br/>
+
+Код:<br/>
+
+{<br/>
+
+“HASP Key”: {<br/>
+
+“Name”: “Key name”,<br/>
+
+“Created”: “01/01/2001”,<br/>
+
+“Password”: “00000000”,<br/>
+
+“Type”: “00000000”,<br/>
+
+“Memory”: “00000000”,<br/>
+
+“SN”: “00000000”,<br/>
+
+“SecTable”: “0x00,0x00,………,0x00”,<br/>
+
+“NetMemory”: “0x00,0x00,………,0x00”,<br/>
+
+“Option”: “0x00,0x00,………,0x00”,<br/>
+
+“Data”: “0x00,0x00,………,0x00”<br/>
+
+}<br/>
+
+}
+</p>
+
+<p>
+Установка драйвера HASP:<br/>
+
+Код:<br/>
+
+cd /usr/src<br/>
+
+wget http://ftp.etersoft.ru/pub/Etersoft/…tos.x86_64.rpm<br/>
+
+wget http://ftp.etersoft.ru/pub/Etersoft/…tos.x86_64.rpm<br/>
+
+yum install haspd-7.90-eter1centos.x86_64.rpm<br/>
+
+yum install haspd-modules-7.90-eter1centos.x86_64.rpm<br/>
+
+Если ставить с помощью rpm <del>ihv</del> установка не произойдет.
+</p>
+
+</div>
