@@ -1,0 +1,90 @@
+==== Установка рабочего места битрикс ====
+
+Установка на новый пк \\
+
+1. Устанавливаем ос xubuntu, 7, 8, 10.\\
+
+2. Создаем пользователей :\\
+superadmin (пароль наш стандартный)\\
+bitrixadmin (берем пароль у Гриценко)\\
+bitrix_usr* (создаем новую учетку без пароля)\\
+
+3. Устанавливаем по :\\
+winscp\\
+notepad++\\
+joxy\\
+putty\\
+mozila firefox\\
+google chrome\\
+yandex browser\\
+opera\\
+7zip\\
+git\\
+teamviewer\\
+AmyAdmin\\
+libre office\\
+skype\\
+
+Установка на не новый пк\\
+
+
+1. Создаем пользователей :\\
+
+bitrix_usr* (создаем новую учетку без пароля)\\
+
+2. Проверяем по :\\
+winscp\\
+notepad++\\
+joxy\\
+putty\\
+mozila firefox\\
+google chrome\\
+yandex browser\\
+opera\\
+7zip\\
+git\\
+teamviewer\\
+AmyAdmin\\
+libre office\\
+skype\\
+
+==== Установка рабочего места 1с ====
+Установка на новый пк \\
+
+1. Устанавливаем ос xubuntu, 7, 8, 10.\\
+
+2. Создаем пользователей :\\
+superadmin (пароль наш стандартный)\\
+(создаем новую учетку с паролем пользователя)\\
+3. Устанавливаем по :
+notepad++\\
+mozila thunderbird\\
+google chrome\\
+7zip\\
+teamviewer\\
+AmyAdmin\\
+Anydesk\\
+libre office\\
+skype\\
+zoiper\\
+3 Добавляем ярлык сервера 
+
+Установка на не новый пк\\
+
+
+1. Создаем пользователей :\\
+
+(создаем новую учетку с паролем пользователя)\\
+2 Проверяем  по :
+notepad++\\
+mozila thunderbird\\
+google chrome\\
+7zip\\
+teamviewer\\
+AmyAdmin\\
+Anydesk\\
+libre office\\
+skype\\
+zoiper \\
+
+3 Добавляем ярлык сервера 
